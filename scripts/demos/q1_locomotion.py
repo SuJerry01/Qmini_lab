@@ -47,6 +47,9 @@ parser.add_argument("--task", type=str, default="Template-Qmini-Walk-200Hz-Play-
 parser.add_argument("--num_envs", type=int, default=32, help="Number of robots to spawn.")
 cli_args.add_rsl_rl_args(parser)  # provides --checkpoint / --load_run / --resume / ...
 add_launcher_args(parser)
+parser.set_defaults(visualizer=["kit"])  # demos open the Kit viewport by default (matches h1_locomotion.py);
+# Isaac Lab 3.0 is otherwise headless unless --viz is given. Under LIVESTREAM the viewport streams; locally
+# it is a desktop window. Override with --viz none for headless.
 args_cli = parser.parse_args()
 if not args_cli.checkpoint:
     args_cli.checkpoint = "models/golden_q2_rslrl.pt"  # default: the bundled golden reference policy

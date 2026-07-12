@@ -78,19 +78,22 @@ Checkpoints and logs are written to `logs/rsl_rl/qmini_birl/<timestamp>/`.
 Play/view defaults to the **200 Hz** variant (faster; identical 66.7 Hz control interface as 1 kHz). To view
 at the exact training rate, swap `200Hz` → `1kHz` in the task id.
 
+**Isaac Lab 3.0 runs headless by default** — pass **`--viz kit`** to open the desktop viewport window when
+you have a display; omit it (or pass `--viz none`) for a headless run (recording, remote server, eval).
+
 ```bash
-# play a trained checkpoint with 32 environments
-python scripts/rsl_rl/play.py --task Template-Qmini-Walk-200Hz-Play-v0 --num_envs 32 \
+# play a trained checkpoint with 32 environments, in a viewport window
+python scripts/rsl_rl/play.py --task Template-Qmini-Walk-200Hz-Play-v0 --num_envs 32 --viz kit \
   --checkpoint logs/rsl_rl/qmini_birl/<run>/model_4999.pt
 
-# record a video of a trained agent (requires ffmpeg)
+# record a video of a trained agent (requires ffmpeg) — headless, no --viz
 python scripts/rsl_rl/play.py --task Template-Qmini-Walk-200Hz-Play-v0 --headless --video --video_length 200 \
   --checkpoint logs/rsl_rl/qmini_birl/<run>/model_4999.pt
 
 # Baseline (no training needed): models/golden_q2_rslrl.pt is RoboTamer's ORIGINAL trained policy — its
 # q2 checkpoint converted to the rsl_rl format — bundled as the migration parity baseline. Play it to see
 # the target gait, and compare any newly-trained policy against it (golden-parity).
-python scripts/rsl_rl/play.py --task Template-Qmini-Walk-200Hz-Play-v0 --num_envs 1 \
+python scripts/rsl_rl/play.py --task Template-Qmini-Walk-200Hz-Play-v0 --num_envs 1 --viz kit \
   --checkpoint models/golden_q2_rslrl.pt
 ```
 
