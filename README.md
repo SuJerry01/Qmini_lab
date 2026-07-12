@@ -39,10 +39,8 @@ python scripts/list_envs.py --keyword Qmini
 
 ### Setup without Docker (conda + pip)
 
-Works on Linux and Windows. This project targets the **Isaac Lab 3.0 line** (Isaac Sim 6.0, Python 3.12).
-PyPI's `isaaclab` currently tops out at 2.3.2 (Python 3.11), which lacks the 3.0 APIs this project uses
-(`launch_simulation`, the `.torch` data accessors, xyzw quaternions) — so Isaac Lab itself must be
-installed **from source at the matching tag** until 3.0 is published; only Isaac Sim comes from pip
+Works on Linux and Windows. This project targets the **Isaac Lab 3.0 line** (Isaac Sim 6.0, Python 3.12);
+its wheels live on NVIDIA's pip index (public PyPI only carries ≤2.3.2), so keep the `--extra-index-url`
 (see the [official pip installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/isaaclab_pip_installation.html)):
 
 ```bash
@@ -55,18 +53,13 @@ pip install --upgrade pip
 pip install -U torch torchvision --index-url https://download.pytorch.org/whl/cu128   # Linux x86_64 / Windows
 pip install -U torch torchvision --index-url https://download.pytorch.org/whl/cu130   # Linux aarch64
 
-# 3. Isaac Sim (run `isaacsim` once afterwards and accept the EULA)
-pip install "isaacsim[all,extscache]==6.0.1.0" --extra-index-url https://pypi.nvidia.com
+# 3. Isaac Lab + Isaac Sim, matching this project's pin (run `isaacsim` once afterwards to accept the EULA)
+pip install "isaaclab[isaacsim,all]==3.0.0b2.post1" --extra-index-url https://pypi.nvidia.com
 
-# 4. Isaac Lab, from source at this project's pin
-git clone --branch v3.0.0-beta2 https://github.com/isaac-sim/IsaacLab.git
-cd IsaacLab
-./isaaclab.sh --install rsl_rl          # Windows: isaaclab.bat --install rsl_rl
-
-# 5. this repo's task package (run from the Qmini_lab repo root)
+# 4. this repo's task package (run from the Qmini_lab repo root)
 python -m pip install -e source/qmini_tasks
 
-# 6. verify
+# 5. verify
 python scripts/list_envs.py --keyword Qmini
 ```
 
