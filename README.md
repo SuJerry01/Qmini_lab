@@ -39,9 +39,11 @@ python scripts/list_envs.py --keyword Qmini
 
 ### Setup without Docker (conda + pip)
 
-Works on Linux and Windows. This project targets the **Isaac Lab 3.0 line** (Isaac Sim 6.0, Python 3.12),
-which is not yet published on PyPI — install Isaac Sim via pip and Isaac Lab from source at the matching
-tag (see the [official pip installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/isaaclab_pip_installation.html)):
+Works on Linux and Windows. This project targets the **Isaac Lab 3.0 line** (Isaac Sim 6.0, Python 3.12).
+PyPI's `isaaclab` currently tops out at 2.3.2 (Python 3.11), which lacks the 3.0 APIs this project uses
+(`launch_simulation`, the `.torch` data accessors, xyzw quaternions) — so Isaac Lab itself must be
+installed **from source at the matching tag** until 3.0 is published; only Isaac Sim comes from pip
+(see the [official pip installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/isaaclab_pip_installation.html)):
 
 ```bash
 # 1. environment (Linux & Windows)
