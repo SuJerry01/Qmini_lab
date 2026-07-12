@@ -55,8 +55,11 @@ if not args_cli.checkpoint:
 #   omni.physx.tensors.plugin: body-path probes from the flattened q1.usd's doubled-name / Physics-scope prims
 args_cli.kit_args = (getattr(args_cli, "kit_args", "") or "") + \
     " --/log/channels/carb.omniclient.plugin=error --/log/channels/omni.physx.tensors.plugin=error" + \
-    ("" if os.environ.get("Q1_WINDOW") else " --no-window") + \
     (" --/log/channels/omni.kit.livestream.webrtc.plugin=verbose" if os.environ.get("Q1_DEBUG") else "")
+if os.environ.get("LIVESTREAM", "0") not in ("0", "") and not os.environ.get("Q1_WINDOW"):
+    # livestream-only workaround: a phantom OS window drops frames and breaks client input routing.
+    # Never set locally (it suppresses the desktop UI window); Q1_WINDOW=1 disables it under livestream too.
+    args_cli.kit_args += " --no-window"
 
 FWD, TURN = 0.6, 1.0  # forward m/s, yaw rad/s — near the max of the training command ranges (vx≤0.7, yaw≤1)
 
