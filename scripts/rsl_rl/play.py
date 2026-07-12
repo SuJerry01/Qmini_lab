@@ -73,7 +73,7 @@ if args_cli.video:
 #   omni.physx.tensors.plugin: body-path probes from the flattened q1.usd's doubled-name / Physics-scope prims
 args_cli.kit_args = (getattr(args_cli, "kit_args", None) or "") + \
     " --/log/channels/carb.omniclient.plugin=error --/log/channels/omni.physx.tensors.plugin=error" + \
-    " --no-window"  # GB10 streaming workaround: no phantom OS window -> client input routes to the UI, no frame drops
+    " --no-window"  # headless-livestream workaround: no phantom OS window -> client input routes to the UI, no frame drops
 
 # clear out sys.argv for Hydra
 sys.argv = [sys.argv[0]] + hydra_args
