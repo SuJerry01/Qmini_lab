@@ -88,6 +88,7 @@ LIVESTREAM=2 python scripts/demos/q1_locomotion.py                              
 LIVESTREAM=2 python scripts/demos/q1_locomotion.py --checkpoint logs/rsl_rl/qmini_birl/<run>/model_4999.pt
 ```
 
-Controls: click a robot to follow · arrow keys steer it · **Shift + left-drag pushes** any robot (native
-Isaac Sim) · C toggles the camera · ESC deselects. `play.py` itself stays non-interactive — the demo is the
-interactive one (official Isaac Lab keeps play and demos separate).
+Controls: **TAB selects/cycles robots** (or click one) · arrow keys steer the selected robot · **P pushes
+the selected robot** · C toggles the camera · ESC deselects · Shift + left-drag shove (native Isaac Sim
+physics mouse interaction) additionally requires a client that forwards mouse input. `play.py` itself stays
+non-interactive — the demo is the interactive one (official Isaac Lab keeps play and demos separate).

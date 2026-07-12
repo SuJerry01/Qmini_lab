@@ -5,10 +5,17 @@
 
 """Gym registration for the Qmini BIRL manager-based task (rsl_rl).
 
-Four envs share the full-Tamer walking MDP (``QminiBirlEnvCfg``):
-``Template-Qmini-Walk-1kHz-v0`` (1 kHz training), ``-Play-v0`` (randomization off),
-and the ``200Hz`` A/B twins (same 66.7 Hz deploy interface, separate log dir via
-``Qmini200HzPPORunnerCfg``). Env cfgs are lazy string entry points.
+Four envs, all sharing the full-Tamer walking MDP (``QminiBirlEnvCfg``); the physics rate is explicit in
+every id:
+
+  Template-Qmini-Walk-1kHz-v0        1 kHz training (canonical, Tamer-faithful)
+  Template-Qmini-Walk-1kHz-Play-v0   1 kHz play/view (randomization off)
+  Template-Qmini-Walk-200Hz-v0       200 Hz training (A/B twin, ~5x throughput)
+  Template-Qmini-Walk-200Hz-Play-v0  200 Hz play/view  — the default for play/demo
+
+Both rates share the identical 66.7 Hz deploy interface (obs/action/control_dt 0.015); only the inner
+physics substep rate differs. The 200 Hz variants log to a separate dir (experiment_name
+"qmini_birl_200hz" via ``Qmini200HzPPORunnerCfg``). Env cfgs are lazy string entry points.
 """
 
 import gymnasium as gym
