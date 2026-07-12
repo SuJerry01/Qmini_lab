@@ -1,0 +1,47 @@
+services:
+  qmini-lab:
+    env_file: .env.base
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        - ISAACLAB_BASE_IMAGE_ARG=${ISAACLAB_BASE_IMAGE}
+        - DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH_ARG=${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}
+    image: qmini-lab:3.0.0-beta2-post1
+    container_name: qmini-lab
+    # Give the container all NVIDIA GPUs (modern shorthand for the verbose resource-reservation block).
+    gpus: all
+    network_mode: host
+    environment:
+      - OMNI_KIT_ALLOW_ROOT=1
+      # - DISPLAY=${DISPLAY}            # uncomment for the Isaac Sim GUI (run `xhost +local:root` on host first)
+    volumes:
+      # Live-mount the whole project so edits on the host take effect in the container (editable install).
+      - type: bind
+        source: ../
+        target: ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}
+      # ✅ VIDEO CAPTURE works via `docker compose run` on beta2-post1 (verified 2026-07-05, clean
+      # single-tenant, newest-file YAVG): cartpole --video renders YAVG 46.7 with TTY (default) AND with
+      # -T. An earlier "compose = black (16)" reading was a MEASUREMENT ARTIFACT (measured a stale
+      # root-owned mp4 via `find | head -1` instead of newest-by-mtime, and/or GPU contention during the
+      # run) — NOT a compose defect. The only genuine render fixes were the beta1->beta2-post1 image bump
+      # and the `from isaaclab.utils.configclass import configclass` code fix. Measure with
+      # `ffmpeg ... signalstats YAVG` on the NEWEST mp4; ~16 = black, »30 = real.
+      # Optional (official ships these): named cache volumes to persist the RTX/GL shader cache across
+      # runs (isaac-cache-kit -> /isaac-sim/kit/cache, -ov -> /root/.cache/ov, -gl -> /root/.cache/nvidia/GLCache).
+      # Left out for now: first-run mount over a populated /isaac-sim/kit/cache made one launch very slow
+      # (looked like a hang at ~12min; likely first-mount volume population). Re-add + time it if launch
+      # startup becomes a bottleneck.
+      # GUI (X11): uncomment with the DISPLAY env above.
+      # - type: bind
+      #   source: /tmp/.X11-unix
+      #   target: /tmp/.X11-unix
+    # The base image ships a healthcheck that greps the Kit log for "AppReady" — meant for containers
+    # that RUN an Isaac Sim app as PID 1. Our entrypoint is bash (apps run on demand), so the probe
+    # always fails and Docker labels the container "(unhealthy)". It's a false alarm here — disable it.
+    healthcheck:
+      disable: true
+    # Interactive shell as the entrypoint — `docker compose run` drops you into bash.
+    entrypoint: bash
+    stdin_open: true
+    tty: true
