@@ -37,6 +37,39 @@ Confirm the task is registered:
 python scripts/list_envs.py --keyword Qmini
 ```
 
+### Setup without Docker (conda + pip)
+
+Works on Linux and Windows. This project targets the **Isaac Lab 3.0 line** (Isaac Sim 6.0, Python 3.12),
+which is not yet published on PyPI — install Isaac Sim via pip and Isaac Lab from source at the matching
+tag (see the [official pip installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/isaaclab_pip_installation.html)):
+
+```bash
+# 1. environment (Linux & Windows)
+conda create -n qmini python=3.12 -y
+conda activate qmini
+pip install --upgrade pip
+
+# 2. PyTorch — pick your platform
+pip install -U torch torchvision --index-url https://download.pytorch.org/whl/cu128   # Linux x86_64 / Windows
+pip install -U torch torchvision --index-url https://download.pytorch.org/whl/cu130   # Linux aarch64
+
+# 3. Isaac Sim (run `isaacsim` once afterwards and accept the EULA)
+pip install "isaacsim[all,extscache]==6.0.1.0" --extra-index-url https://pypi.nvidia.com
+
+# 4. Isaac Lab, from source at this project's pin
+git clone --branch v3.0.0-beta2 https://github.com/isaac-sim/IsaacLab.git
+cd IsaacLab
+./isaaclab.sh --install rsl_rl          # Windows: isaaclab.bat --install rsl_rl
+
+# 5. this repo's task package (run from the Qmini_lab repo root)
+python -m pip install -e source/qmini_tasks
+
+# 6. verify
+python scripts/list_envs.py --keyword Qmini
+```
+
+All train/play/demo commands below then run directly in this environment (no container).
+
 ## Train
 
 ```bash
