@@ -72,6 +72,12 @@ args_cli, hydra_args = parser.parse_known_args()
 if args_cli.video:
     args_cli.enable_cameras = True
 
+# Silence two confirmed-benign, spammy log channels — real problems still surface as [Error]:
+#   carb.omniclient.plugin  : OmniHub launch retries (no Nucleus is used; assets are local)
+#   omni.physx.tensors.plugin: body-path probes from the flattened q1.usd's doubled-name / Physics-scope prims
+args_cli.kit_args = (getattr(args_cli, "kit_args", None) or "") + \
+    " --/log/channels/carb.omniclient.plugin=error --/log/channels/omni.physx.tensors.plugin=error"
+
 sys.argv = [sys.argv[0]] + hydra_args
 
 # -- check RSL-RL version ----------------------------------------------------
